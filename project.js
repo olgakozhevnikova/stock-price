@@ -4,33 +4,23 @@
 }, 15000);*/
 
 var stocks = [];
-
 window.onload = function() {
-	function toTimeZone(time, zone) {
-	    var format = 'YYYY/MM/DD HH:mm:ss ZZ';
-	    return moment(time, format).tz(zone).format(format);
-	};
-	$.ajax({
-		type: "GET",
-		url: "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=1min&apikey=T6UEJETEQRVGDJS9",
-		success: function(result){
-			stocks = result;
-			getPrices();
-			
-		}
-	});
+    var symbols = ['AAPL', 'MSFT', 'CSCO', 'FB', 'AMZN', 'GOOG', 'INTC', 'KHC', 'NVDA', 'AVGO'];
+
+    symbols.forEach( symbol => makeAjaxCall(symbol));
+
 }
 
-/*window.onload = function() {
+function makeAjaxCall(param){
 	$.ajax({
-		type: "GET",
-		url: "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=1min&apikey=T6UEJETEQRVGDJS9",
-		success: function(result){
-			stocks = result;
-			getPrices();
-		}
+	    type: "GET",
+	    url: "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + param + "&interval=1min&apikey=T6UEJETEQRVGDJS9",
+	    success: function(result){
+	        stocks = result;
+	        getPrices();
+	    }
 	});
-}*/
+}
 
 function getPrices() {
 	var metaData = stocks["Meta Data"];
@@ -46,7 +36,6 @@ function getPrices() {
 		//1 hour = 3600 sec
 		nd = new Date(ny), //convert NY time in msec to date string
 		dd = nd.getDate(),
-		ddPrev = nd.getDate()-1,
 		mm = nd.getMonth()+1,
 		yyyy = nd.getFullYear(),
 		hh = nd.getHours(),
@@ -54,51 +43,63 @@ function getPrices() {
 		if(dd < 10) dd = '0' + dd;
 		if(mm < 10) mm = '0' + mm;
 		if(min < 10) min = '0' + min;
-		if(ddPrev < 10) ddPrev = '0' + ddPrev;
-		d = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + min + ':00';
-	var dOpt = yyyy + '-' + mm + '-' + ddPrev + ' 16:00:00';
-		//console.log(d);
-	//var d = "2017-12-14 16:00:00";
-	var price = timeSeries[nd],
-		priceOpt = timeSeries[dOpt];
+		d = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + min + ':00',
+		dOpt = yyyy + '-' + mm + '-' + dd;
+		dmy = dd + '.' + mm + '.' + yyyy,
+		price = timeSeries[nd],
+		//the following variables define data which will be displayed when stock exchange is closed 
+		dateKeys = Object.keys(timeSeries),
+		firstElem = dateKeys[0],
+		lastWord = firstElem.lastIndexOf(" "),
+		properDate = firstElem.substring(0, lastWord),
+		lastDate = timeSeries[Object.keys(timeSeries)[0]];
 	if (timeSeries[nd]) {
+		document.getElementById("loadedStocks").innerHTML = metaData["2. Symbol"];
 		Object.getOwnPropertyNames(price).forEach(  function (val, idx, array) {
 				document.getElementById("stockPrices").innerHTML += val + ': ' + price[val] + '<br>';
 				}
 		);
-		document.getElementById("loadedStocks").innerHTML = metaData["2. Symbol"];
+		document.getElementById("symbol").innerHTML = metaData["2. Symbol"] + ' ' + dmy;
 	}
-	//when the stock exchange is closed, the data of closing time of previous day will be displayed on the page
-	//variable ddPrev = d.getDate()-1 has such value, because of time difference with NY
+	//when the stock exchange is closed, the last data of a day will be displayed on the page
 	else {
-	document.getElementById("loadedStocks").innerHTML = metaData["2. Symbol"] + ' ' + dOpt;
-	Object.getOwnPropertyNames(priceOpt).forEach(  function (val, idx, array) {
-				document.getElementById("stockPrices").innerHTML += val + ': ' + priceOpt[val] + '<br>';
+	document.getElementById("loadedStocks").innerHTML = metaData["2. Symbol"] + ' ' + properDate;
+	Object.getOwnPropertyNames(lastDate).forEach(  function (val, idx, array) {
+				document.getElementById("stockPrices").innerHTML += val + ': ' + lastDate[val] + '<br>';
 				}
 		);
+	document.getElementById("symbol").innerHTML = metaData["2. Symbol"] + ' ' + properDate;
 	}
 	//in a line chart horizontal line will display date and time, vertical line stock prices
 	//for that I need to place data in 2 different arrays
-	var labelsValues = Object.keys(timeSeries);
-	var datasetsValues = Object.values(timeSeries);
-	var highPrice = Object.values(datasetsValues).map(o => o["2. high"]);
-	console.log(highPrice);
+	var datasetsValues = Object.values(timeSeries),
+		datasetsValuesReverse = datasetsValues.reverse();
+		highPrice = Object.values(datasetsValuesReverse).map(o => o["4. close"]),
+		//common = dateKeys.map(a => [...a]).reduce((a, b) => a.map((v, i) => v === b[i] ? v : null)).filter(Boolean),
+		//result = dateKeys.map(a => [...a].filter((v, i) => v !== common[i]).join('')),
+		datesReverse = dateKeys.reverse();
 	new Chart(document.getElementById("line-chart"), {
 		type: 'line',
 		data: {
-			labels: labelsValues,
+			labels: datesReverse,
 			datasets: [{
 				data: highPrice,
-				label: "Highest price",
-				borderColor: "#8e5ea2",
-				fill: false
-			}]
+				borderColor: "#00BFFF",
+				label: "Close",
+			}],
+			pointStyle: "cross",
 		},
 		options: {
 			title: {
 				display: true,
-				text: 'Stock prices chart'
+				text: "Stock's close price changes"
 			}
 		}
 	});
+
 }
+function showChart() {
+		//console.log('working');
+		$('#chartModal').modal();
+
+	};
