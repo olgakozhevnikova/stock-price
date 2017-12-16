@@ -4,7 +4,9 @@
   "description": "This is the task for getting stock prices in real time.",
   "main": "project.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run lite",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lite": "lite-server"
   },
   "repository": {
     "type": "git",
@@ -12,11 +14,15 @@
   },
   "author": "Olga Kozhevnikova",
   "license": "ISC",
-  "bugs": {
+    "bugs": {
     "url": "https://github.com/olgakozhevnikova/stock-price/issues"
   },
   "homepage": "https://github.com/olgakozhevnikova/stock-price#readme",
   "dependencies": {
-    "alphavantage": "^1.0.0"
+    "alphavantage": "^1.0.0",
+    "bootstrap": "^4.0.0-alpha.6"
+  },
+  "devDependencies": {
+    "lite-server": "^2.3.0"
   }
 }
