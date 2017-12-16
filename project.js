@@ -71,7 +71,6 @@ function getPrices() {
 	//when the stock exchange is closed, the data of closing time of previous day will be displayed on the page
 	//variable ddPrev = d.getDate()-1 has such value, because of time difference with NY
 	else {
-	alert("Stock exchange is closed");
 	document.getElementById("loadedStocks").innerHTML = metaData["2. Symbol"] + ' ' + dOpt;
 	Object.getOwnPropertyNames(priceOpt).forEach(  function (val, idx, array) {
 				document.getElementById("stockPrices").innerHTML += val + ': ' + priceOpt[val] + '<br>';

@@ -2,7 +2,7 @@
   "name": "stockprice",
   "version": "1.0.0",
   "description": "This is the task for getting stock prices in real time.",
-  "main": "project.html",
+  "main": "index.html",
   "scripts": {
     "start": "npm run lite",
     "test": "echo \"Error: no test specified\" && exit 1",
