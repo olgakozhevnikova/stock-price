@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<!--<meta http-equiv="Refresh" content="15" />-->
+
 	<title>Stock Price</title>
 	<link rel="styleSheet" href="project.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="project.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 </head>
 <body>
 	<h1>Stock prices in real time</h1>
 	<div id="loadedStocks"></div>
+	<div id="stockPrices"></div>
+	<canvas id="line-chart" width="800" height="450"></canvas>
 </body>
 </html>
