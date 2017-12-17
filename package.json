@@ -4,9 +4,12 @@
   "description": "This is the task for getting stock prices in real time.",
   "main": "index.html",
   "scripts": {
-    "start": "npm run lite",
+    "start": "npm run watch:all",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lite": "lite-server"
+    "lite": "lite-server",
+    "scss": "node-sass -o css/ css/",
+    "watch:scss": "onchange \"css/*.scss\" -- npm run scss",
+    "watch:all": "parallelshell \"npm run watch:scss\" \"npm run lite\""
   },
   "repository": {
     "type": "git",
@@ -14,7 +17,7 @@
   },
   "author": "Olga Kozhevnikova",
   "license": "ISC",
-    "bugs": {
+  "bugs": {
     "url": "https://github.com/olgakozhevnikova/stock-price/issues"
   },
   "homepage": "https://github.com/olgakozhevnikova/stock-price#readme",
@@ -23,6 +26,9 @@
     "bootstrap": "^4.0.0-alpha.6"
   },
   "devDependencies": {
-    "lite-server": "^2.3.0"
+    "lite-server": "^2.3.0",
+    "node-sass": "^4.7.2",
+    "onchange": "^3.3.0",
+    "parallelshell": "^3.0.2"
   }
 }

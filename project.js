@@ -17,7 +17,7 @@ function makeAjaxCall(param){
 	    url: "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + param + "&interval=1min&apikey=T6UEJETEQRVGDJS9",
 	    success: function(result){
 	        stocks = result;
-	        getPrices();
+	        getPrices(); 
 	    }
 	});
 }
@@ -53,30 +53,50 @@ function getPrices() {
 		lastWord = firstElem.lastIndexOf(" "),
 		properDate = firstElem.substring(0, lastWord),
 		lastDate = timeSeries[Object.keys(timeSeries)[0]];
+
+		myHtml =    '<div class="button col-3 align-self-center">' + 
+						'<a role="button" class="btn btn-success btn-block text-white" onclick="showChart()">Show chart</a>' + 
+					'</div>';
+		myMdl1 = 	'<div class="modal-dialog modal-lg" role="content">' + 
+						'<div class="modal-content">' + 
+							'<div class="modal-header" id="modalHeader"><h4>',
+		myMdl2 =          		'</h4><button type="button1" class="close" data-dismiss="modal">&times;</button>' + 
+							'</div>' + 
+							'<div class="modal-body" id="modalBody">' + 
+								'<div class="container-canvas">' + 
+									'<canvas id="line-chart" width="400" height="250"></canvas>' + 
+								'</div>' + 
+							'</div>' + 
+						'</div>' + 
+					'</div>';
+		
+
+		
+
 	if (timeSeries[nd]) {
-		document.getElementById("loadedStocks").innerHTML = metaData["2. Symbol"];
+		var priceList1 = '';
 		Object.getOwnPropertyNames(price).forEach(  function (val, idx, array) {
-				document.getElementById("stockPrices").innerHTML += val + ': ' + price[val] + '<br>';
+				priceList1 += val + ': ' + price[val] + '<br>';
 				}
 		);
-		document.getElementById("symbol").innerHTML = metaData["2. Symbol"] + ' ' + dmy;
+		document.getElementById("loadedStocks").innerHTML += '<div>' + metaData["2. Symbol"] + '<br>' + priceList1 + '</div>' + myHtml;
+		document.getElementById("chartModal").innerHTML += myMdl1 + metaData["2. Symbol"] + ' ' + dmy + myMdl2;
 	}
 	//when the stock exchange is closed, the last data of a day will be displayed on the page
 	else {
-	document.getElementById("loadedStocks").innerHTML = metaData["2. Symbol"] + ' ' + properDate;
-	Object.getOwnPropertyNames(lastDate).forEach(  function (val, idx, array) {
-				document.getElementById("stockPrices").innerHTML += val + ': ' + lastDate[val] + '<br>';
-				}
+		var priceList2 = '';
+		Object.getOwnPropertyNames(lastDate).forEach(  function (val, idx, array) {
+				priceList2 += val + ': ' + lastDate[val] + '<br>';
+			}
 		);
-	document.getElementById("symbol").innerHTML = metaData["2. Symbol"] + ' ' + properDate;
+		document.getElementById("loadedStocks").innerHTML += '<div>' + metaData["2. Symbol"] + ' ' + properDate + '<br>' + priceList2 + '</div>' + myHtml;
+		document.getElementById("chartModal").innerHTML += myMdl1 + metaData["2. Symbol"] + ' ' + properDate + myMdl2;
 	}
 	//in a line chart horizontal line will display date and time, vertical line stock prices
 	//for that I need to place data in 2 different arrays
 	var datasetsValues = Object.values(timeSeries),
 		datasetsValuesReverse = datasetsValues.reverse();
 		highPrice = Object.values(datasetsValuesReverse).map(o => o["4. close"]),
-		//common = dateKeys.map(a => [...a]).reduce((a, b) => a.map((v, i) => v === b[i] ? v : null)).filter(Boolean),
-		//result = dateKeys.map(a => [...a].filter((v, i) => v !== common[i]).join('')),
 		datesReverse = dateKeys.reverse();
 	new Chart(document.getElementById("line-chart"), {
 		type: 'line',
@@ -102,4 +122,15 @@ function showChart() {
 		//console.log('working');
 		$('#chartModal').modal();
 
-	};
+}
+
+function handleSearch(event) {
+    var searchText = event.currentTarget.value.toUpperCase(),
+    	content = document.getElementById("loadedStocks");
+    for (i = 0; i < content.length; i++) {
+        if (content.innerHTML.toUpperCase().indexOf(searchText) > -1)
+            content.style.display = "";
+        else 
+            content.style.display = "none";
+    }
+}

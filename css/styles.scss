@@ -1,0 +1,21 @@
+$lt-gray: #ddd;
+$background-dark: #512DA8;
+$background-light: #9575CD;
+$background-pale: #D1C4E9;
+
+//Defining mixin
+@mixin zero-margin($pad-up-down, $pad-left-right) {
+	margin: 0px auto;
+	padding: $pad-up-down $pad-left-right; 
+} 
+.modal-header {
+	background: $background-dark;
+}
+.modal-body {
+	background: $background-pale;
+}
+.row-content {
+	@include zero-margin(50px, 0px);
+	border-bottom: 1px ridge;
+	min-height: 400px;
+}
