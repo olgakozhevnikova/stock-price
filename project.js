@@ -2,10 +2,11 @@
 /*setTimeout(function(){
     location.reload();
 }, 15000);*/
+// , 'MSFT', 'CSCO', 'FB', 'AMZN', 'GOOG', 'INTC', 'KHC', 'NVDA', 'AVGO'
 
 var stocks = [];
 window.onload = function() {
-    var symbols = ['AAPL', 'MSFT', 'CSCO', 'FB', 'AMZN', 'GOOG', 'INTC', 'KHC', 'NVDA', 'AVGO'];
+    var symbols = ['AAPL', 'MSFT'];
 
     symbols.forEach( symbol => makeAjaxCall(symbol));
 }
@@ -53,8 +54,7 @@ function getPrices() {
 		lastWord = firstElem.lastIndexOf(" "),
 		properDate = firstElem.substring(0, lastWord),
 		lastDate = timeSeries[Object.keys(timeSeries)[0]];
-	
-	
+
 	if (timeSeries[nd]) {
 		var priceList1 = '';
 		Object.getOwnPropertyNames(price).forEach(  function (val, idx, array) {
@@ -71,35 +71,18 @@ function getPrices() {
 				priceList2 += val + ': ' + lastDate[val] + '<br>';
 			}
 		);
-		document.getElementById("loadedStocks").innerHTML += '<div class="stockDiv"><span><a onclick="showChart()">' + sym + '</a></span></div><div>' + properDate + '<br>' + priceList2 + '</div>';
-		
+		document.getElementById("loadedStocks").innerHTML += '<div><span><a onclick="showChart()">' + sym + '</a></span></div><div>' + properDate + '<br>' + priceList2 + '</div>';
+		document.getElementById("myModal").innerHTML += '<div class="modal-dialog modal-lg" role="content"><div class="modal-content"><div class="modal-header"><h4>' + sym + 
+						'</h4><button type="button1" class="close" data-dismiss="modal">&times;</button></div><div class="modal-body" id="modalBody"><div class = "container-canvas"><canvas id = "line-chart" width = "400" height = "250"></canvas></div></div></div></div>';
 	}
-		var mdl1 = '<div id="chartModal" class="modal fade" role="dialog">' + 
-					'<div class="modal-dialog modal-lg" role="content">' + 
-						'<div class="modal-content">' + 
-							'<div class="modal-header" id="modalHeader">' + 
-								'<h4>',
 
-		mdl2 = 						'</h4>' + 
-								'<button type="button1" class="close" data-dismiss="modal">&times;</button>' + 
-							'</div>' + 
-							'<div class="modal-body" id="modalBody">' + 
-								'<div class = "container-canvas">' + 
-									'<canvas id = "line-chart" width = "400" height = "250"></canvas>' + 
-								'</div>' + 
-							'</div>' + 
-						'</div>' + 
-					'</div>' + 
-				'</div>';
-
-    document.getElementById("myModal").innerHTML += mdl1 + sym + ' ' + metaData["3. Last Refreshed"] + mdl2;
-
-	//in a line chart horizontal line will display date and time, vertical line stock prices
+    //in a line chart horizontal line will display date and time, vertical line stock prices
 	//for that I need to place data in 2 different arrays
 	var datasetsValues = Object.values(timeSeries),
 		datasetsValuesReverse = datasetsValues.reverse();
 		highPrice = Object.values(datasetsValuesReverse).map(o => o["4. close"]),
 		datesReverse = dateKeys.reverse();
+
 	new Chart(document.getElementById("line-chart"), {
 		type: 'line',
 		data: {
@@ -122,9 +105,7 @@ function getPrices() {
 
 }
 function showChart() {
-		//console.log('working');
 		$('#chartModal').modal();
-
 }
 
 function handleSearch(event) {
