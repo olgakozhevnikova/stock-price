@@ -1,8 +1,8 @@
 .modal-header {
-  background: #512DA8; }
+  background: #0000FF; }
 
-.modal-body {
-  background: #D1C4E9; }
+.modal-body, body {
+  background: #ADD8E6; }
 
 .row-content {
   margin: 0px auto;
