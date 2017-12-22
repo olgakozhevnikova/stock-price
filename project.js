@@ -1,25 +1,35 @@
 // Alphavantage API key 8TKKZE0GET944FMW
 
-$(function() {
+
+
+$(() => {
+   loadData();
+    setInterval(loadData, 60000);
+});
+
+const loadData = () => {
   var loadedStocks = $("#loadedStocks"),
       API = 'https://www.alphavantage.co/query',
       symbols = ['AAPL', 'MSFT', 'CSCO', 'FB', 'AMZN', 'GOOG', 'INTC', 'KHC', 'NVDA', 'AVGO'];
 
   symbols.forEach(symbol => makeAjaxCall(symbol));
 
-  function makeAjaxCall(param) {
-    $.getJSON(API, {
-      'function': 'TIME_SERIES_INTRADAY',
-      'symbol': param,
-      'interval': '1min',
-      'apikey': '8TKKZE0GET944FMW',
-    }, getPrices);
+  function makeAjaxCall(param){
+    $.ajax({
+        type: "GET",
+        url: "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + param + "&interval=1min&apikey=8TKKZE0GET944FMW",
+        success: function(result){
+            stocks = result;
+            getPrices();
+        }
+    });
   }
-
-  function getPrices(stocks) {
+  //clear html before the next ajax call
+  document.getElementById("loadedStocks").innerHTML = '';
+  function getPrices() {
     var metaData = stocks["Meta Data"],
-      timeSeries = stocks["Time Series (1min)"],
-      symbol = metaData["2. Symbol"];
+        timeSeries = stocks["Time Series (1min)"],
+        symbol = metaData["2. Symbol"];
 
     var d = new Date(), //date object for current location
           localTime = d.getTime(), //convert to msec since Jan 1, 1970
@@ -143,4 +153,4 @@ $(function() {
     //find modal based on this link's stock value
     $('#chartModal-' + this.dataset.stock).modal('show');
   });
-});
+};

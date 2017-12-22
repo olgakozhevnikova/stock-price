@@ -4,6 +4,10 @@
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="styleSheet" href="css/styles.css">
+
+<!--<meta http-equiv="refresh" content="60" />
+    This will refresh page in every 5 seconds, change content= x to refresh page after x seconds -->
+
 	<title>Stock Prices</title>
 </head>
 <body>
@@ -11,8 +15,7 @@
 		<div class="row row-content">
 			<div class="col">
 				<h1>Stock prices in real time</h1>
-				<div id="loadedStocks">
-					<table class="table">
+				<table class="table">
 						<thead>
 							<tr>
 								<th>Symbol</th>
@@ -25,7 +28,7 @@
 							</tr>
 						</thead>
 					</table>
-				</div>
+				<div id="loadedStocks"></div>
 			</div>
 		</div>		
 	</div>
@@ -35,5 +38,6 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script> 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 	<script src="project.js"></script>
+
 </body>
 </html>
