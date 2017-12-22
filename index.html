@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<!--<meta http-equiv="Refresh" content="15" />-->
 	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="styleSheet" href="css/styles.css">
 	<title>Stock Prices</title>
@@ -12,28 +11,7 @@
 		<div class="row row-content">
 			<div class="col">
 				<h1>Stock prices in real time</h1>
-				<form>
-				  <div>
-				  	<label for = "stockSearch">Search for a stock: </label>
-				    <input type = "search" id = "stockSearch" name = "q" placeholder = "AAPL" onkeyup = "handleSearch()">
-				  </div>
-				</form>
 				<div id="loadedStocks"></div>
-				<div id="myModal"></div>
-				<!--<div class="modal-dialog modal-lg" role="content"> 
-					<div class="modal-content">
-						<div class="modal-header"> 
-							<h4 id="header">
-	 						</h4> 
-							<button type="button1" class="close" data-dismiss="modal">&times;</button>
-						</div>
-						<div class="modal-body" id="modalBody">
-							<div class = "container-canvas"> 
-								<canvas id = "line-chart" width = "400" height = "250"></canvas> 
-							</div>
-						</div>
-					</div>
-				</div> -->
 			</div>
 		</div>		
 	</div>
