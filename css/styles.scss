@@ -1,5 +1,7 @@
-$background-dark: #0000FF;
-$background-pale: #ADD8E6;
+$light-green: #14A098;
+$light-gray: #CCCCCC;
+$light-purple: #CB2D6F;
+$dark-purple: #501F3A;
 
 //Defining mixin
 @mixin zero-margin($pad-up-down, $pad-left-right) {
@@ -7,13 +9,36 @@ $background-pale: #ADD8E6;
 	padding: $pad-up-down $pad-left-right; 
 } 
 .modal-header {
-	background: $background-dark;
+	background: $light-green;
 }
 .modal-body, body {
-	background: $background-pale;
+	background: $light-gray;
 }
 .row-content {
 	@include zero-margin(50px, 0px);
 	border-bottom: 1px ridge;
 	min-height: 400px;
+}
+.modal-header h4 {
+	color: $light-gray;
+}
+h1 {
+	text-align: center;
+	color: #501F3A;
+}
+#myTable tr {
+	background-color: $light-green;
+}
+thead {
+	background-color: $light-purple;
+	color: $dark-purple;
+	text-transform: uppercase;
+}
+a {
+	color: $light-purple;
+	font-weight: bold;
+}
+a:hover {
+	text-decoration: none;
+	color: $light-gray;
 }

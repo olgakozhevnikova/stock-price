@@ -1,16 +1,14 @@
 // Alphavantage API key 8TKKZE0GET944FMW
 
-
-
 $(() => {
-   loadData();
-    setInterval(loadData, 60000);
+  loadData();
+  setInterval(loadData, 60000);
 });
 
 const loadData = () => {
   var loadedStocks = $("#loadedStocks"),
       API = 'https://www.alphavantage.co/query',
-      symbols = ['AAPL', 'MSFT', 'CSCO', 'FB', 'AMZN', 'GOOG', 'INTC', 'KHC', 'NVDA', 'AVGO'];
+      symbols = ['AAPL', 'MSFT', 'CSCO', 'AMZN', 'GOOG', 'INTC', 'KHC', 'NVDA', 'AVGO'];
 
   symbols.forEach(symbol => makeAjaxCall(symbol));
 
@@ -85,63 +83,92 @@ const loadData = () => {
         }
       );*/
       loadedStocks.append(
-        '<table class="table">' + 
-          '<tbody><tr>' + 
-            '<td><a href="#" data-stock="' + symbol + '">' + symbol + '</a></td>' + 
-            '<td>' + dmy + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[d]]['1. open'] + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[d]]['2. high'] + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[d]]['3. low'] + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[d]]['4. close'] + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[d]]['5. volume'] + '</td>' + 
-          '</tbody>' + 
-        '</table>' + modal);
+        '<div class="table-responsive"' + 
+          '<table class="table" id="myTable">' + 
+            '<tbody><tr>' + 
+              '<td><a href="#" data-stock="' + symbol + '">' + symbol + '</a></td>' + 
+              '<td>' + dmy + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[d]]['1. open'] + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[d]]['2. high'] + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[d]]['3. low'] + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[d]]['4. close'] + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[d]]['5. volume'] + '</td>' + 
+            '</tr></tbody>' + 
+          '</table>' + 
+        '</div>' + modal);
     }
     //when the stock exchange is closed, the last data of a day will be displayed on the page
     else {
-      /*var priceList2 = '';
-      Object.getOwnPropertyNames(lastDate).forEach(  function (val, idx, array) {
-          priceList2 += val + ': ' + lastDate[val] + '<br>';
-        }
-      );*/
       //HTML5-data attribute to store the stock value 
       loadedStocks.append(
-        '<table class="table">' + 
-          '<tbody><tr>' + 
-            '<td><a href="#" data-stock="' + symbol + '">' + symbol + '</a></td>' + 
-            '<td>' + properDate + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[0]]['1. open'] + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[0]]['2. high'] + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[0]]['3. low'] + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[0]]['4. close'] + '</td>' + 
-            '<td>' + timeSeries[Object.keys(timeSeries)[0]]['5. volume'] + '</td>' + 
-          '</tbody>' + 
-        '</table>' + modal);
+          '<table class="table" id="myTable">' + 
+            '<tbody><tr>' + 
+              '<td><a href="#" data-stock="' + symbol + '">' + symbol + '</a></td>' + 
+              '<td>' + properDate + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[0]]['1. open'] + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[0]]['2. high'] + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[0]]['3. low'] + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[0]]['4. close'] + '</td>' + 
+              '<td>' + timeSeries[Object.keys(timeSeries)[0]]['5. volume'] + '</td>' + 
+            '</tr></tbody>' + 
+          '</table>'+ modal);
     }
 
     var datasetsValues = Object.values(timeSeries),
         datasetsValuesReverse = datasetsValues.reverse(),
         highPrice = Object.values(datasetsValuesReverse).map(o => o["4. close"]),
         dateKeys = Object.keys(timeSeries),
+        last = loadedStocks.find('.line-chart').last()[0], //last element
         datesReverse = dateKeys.reverse(),
-        last = loadedStocks.find('.line-chart').last()[0]; //last element
+        //on axis X display only time without date e.g. 15:00:00
+        outputTime = [];
+    for (var i =0; i < datesReverse.length; i++) {
+      var items =  datesReverse[i].split(" ");
+      datesReverse[i] = datesReverse[i].replace(items[0] + " ", "");
+      outputTime[i] = datesReverse[i];
+    };
 
     new Chart(last, {
       type: 'line',
       data: {
-        labels: datesReverse,
+        labels: outputTime,
         datasets: [{
           data: highPrice,
-          borderColor: "#FF4500",
-          label: "Close",
-          fillset: "#FFDAB9"
+          label: 'Close',
+          borderColor: '#501F3A',
+          backgroundColor: '#CB2D6F',
+          borderWidth: 3
         }],
-        pointStyle: "cross",
       },
       options: {
         title: {
           display: true,
-          text: "Stock's close price changes"
+          text: 'STOCK CLOSE PRICE CHANGES',
+          fontColor: '#501F3A',
+          fontSize: 20
+        },
+        tooltips: {
+          mode: 'point',
+          pointStyle: 'cross',
+          displayColors: false,
+          caretSize: 10,
+          caretPadding: 5,
+          backgroundColor: '#14A098'
+        },
+        legend: {
+          position: 'bottom',
+          labels: {
+            fontColor: '#501F3A',
+            fontSize: 20
+          }
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50,
+                top: 0,
+                bottom: 20
+            }
         }
       }
     });
@@ -153,4 +180,4 @@ const loadData = () => {
     //find modal based on this link's stock value
     $('#chartModal-' + this.dataset.stock).modal('show');
   });
-};
+}
